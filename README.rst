@@ -4,14 +4,14 @@ email-queue
 This module implements an email queue which acts as a transaction safe
 buffer for tryton modules to send emails.
 
-.. image:: https://travis-ci.org/openlabs/email-queue.svg?branch=develop
-    :target: https://travis-ci.org/openlabs/email-queue
+.. image:: https://travis-ci.org/fulfilio/email-queue.svg?branch=develop
+    :target: https://travis-ci.org/fulfilio/email-queue
 
-.. image:: https://coveralls.io/repos/openlabs/email-queue/badge.png
-    :target: https://coveralls.io/r/openlabs/email-queue
+.. image:: https://coveralls.io/repos/fulfilio/email-queue/badge.png
+    :target: https://coveralls.io/r/fulfilio/email-queue
 
 
-Source code: https://github.com/openlabs/email-queue
+Source code: https://github.com/fulfilio/email-queue
 
 Why should I use this module ?
 ------------------------------
@@ -59,11 +59,11 @@ How do I install this module ?
 
 Install from PyPI::
 
-   pip install openlabs_email_queue
+   pip install fio_email_queue
 
 Install from source::
 
-    git clone git@github.com:openlabs/email-queue
+    git clone git@github.com:fulfilio/email-queue
     python setup.py install
 
 You can then install the module in your database.
@@ -101,16 +101,3 @@ How do I configure the SMTP Server ?
 By default the emails are sent out using the smtp client provided by
 Tryton. You can configure the settings for the same on your tryton
 configuration file.
-
-Authors and Contributors
-------------------------
-
-This module was built at `Openlabs <http://www.openlabs.co.in>`_. 
-
-Professional Support
---------------------
-
-This module is professionally supported by `Openlabs <http://www.openlabs.co.in>`_.
-If you are looking for on-site teaching or consulting support, contact our
-`sales <mailto:sales@openlabs.co.in>`_ and `support
-<mailto:support@openlabs.co.in>`_ teams.
