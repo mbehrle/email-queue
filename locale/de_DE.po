@@ -1,4 +1,4 @@
-# 
+#
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
@@ -50,9 +50,37 @@ msgctxt "model:email.queue,name:"
 msgid "Email Queue"
 msgstr "E-Mail Warteschlange"
 
+msgctxt "model:ir.action,name:act_email_queue_form"
+msgid "Emails Queue"
+msgstr "E-Mail Warteschlange"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_email_queue_form_domain_all"
+msgid "All"
+msgstr "Alle"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_email_queue_form_domain_failed"
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_email_queue_form_domain_outbox"
+msgid "Outbox"
+msgstr "Postausgang"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_email_queue_form_domain_sent"
+msgid "Sent"
+msgstr "Gesendet"
+
 msgctxt "model:ir.cron,name:send_mail_cron"
 msgid "Send Mail Cron"
 msgstr "Zeitplaner Mailversand"
+
+msgctxt "model:ir.ui.menu,name:menu_email_queue_form"
+msgid "Emails Queue"
+msgstr "E-Mail Warteschlange"
 
 msgctxt "model:res.user,name:email_sender"
 msgid "Email Sender"
@@ -73,3 +101,7 @@ msgstr "Versandbereit"
 msgctxt "selection:email.queue,state:"
 msgid "Sent"
 msgstr "Gesendet"
+
+msgctxt "view:email.queue:"
+msgid "Email Queue"
+msgstr "E-Mail Warteschlange"
