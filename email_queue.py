@@ -6,7 +6,7 @@
 from email.message import Message
 
 from trytond.model import ModelSQL, ModelView, fields
-from trytond.tools import get_smtp_server
+from trytond.sendmail import get_smtp_server
 from trytond.transaction import Transaction
 
 __all__ = ['EmailQueue']
@@ -70,22 +70,22 @@ class EmailQueue(ModelSQL, ModelView):
 
         values = {'attempts': self.attempts + 1}
 
-        with Transaction().new_cursor() as txn:
+        with Transaction().new_transaction() as txn:
             try:
                 self.write([self], {'state': 'sending'})
                 smtp_server.sendmail(
                     self.from_addr, self.to_addrs.split(','), self.msg
                 )
             except Exception:
-                txn.cursor.rollback()
+                txn.rollback()
 
                 # Record the attempts and check if the mail has to be
                 # marked for permanent failure
-                with Transaction().new_cursor() as txn:
+                with Transaction().new_transaction() as txn:
                     if values['attempts'] >= 3:
                         values['state'] = 'failed'
                     self.write([self], values)
-                    txn.cursor.commit()
+                    txn.commit()
 
                 # Finally raise the exception again
                 raise
@@ -93,7 +93,7 @@ class EmailQueue(ModelSQL, ModelView):
             else:
                 values['state'] = 'sent'
                 self.write([self], values)
-                txn.cursor.commit()
+                txn.commit()
 
     @classmethod
     def send_all(cls):
