@@ -3,14 +3,7 @@
     tests/test_email_queue.py
 
 """
-import sys
 import time
-import os
-DIR = os.path.abspath(os.path.normpath(os.path.join(
-    __file__, '..', '..', '..', '..', '..', 'trytond'
-)))
-if os.path.isdir(DIR):
-    sys.path.insert(0, os.path.dirname(DIR))
 import unittest
 import threading
 import Queue
@@ -20,8 +13,11 @@ from mock import patch
 from pretend import stub
 from faker import Faker
 
-from trytond.tests.test_tryton import POOL, USER, DB_NAME, CONTEXT
+from trytond.tests.test_tryton import (
+    POOL, USER, DB_NAME, CONTEXT, ModuleTestCase
+)
 from trytond.transaction import Transaction
+from trytond.cache import Cache
 from trytond import backend
 import trytond.tests.test_tryton
 
@@ -32,7 +28,7 @@ def clear_email_queue(function):
         EmailQueue = POOL.get('email.queue')
         with Transaction().start(DB_NAME, USER, CONTEXT) as transaction:
             EmailQueue.delete(EmailQueue.search([]))
-            transaction.cursor.commit()
+            transaction.commit()
         return function(*args, **kwargs)
     return wrapper
 
@@ -41,17 +37,12 @@ class BadSMTPServerException(Exception):
     pass
 
 
-class TestEmailQueue(unittest.TestCase):
+class TestEmailQueue(ModuleTestCase):
     '''
     Test Email Queue
     '''
 
-    def setUp(self):
-        """
-        Set up data used in the tests.
-        this method is called before each test function execution.
-        """
-        trytond.tests.test_tryton.install_module('email_queue')
+    module = 'email_queue'
 
     @patch("smtplib.SMTP")
     def test_0010_send_mails(self, mock_smtp):
@@ -66,7 +57,7 @@ class TestEmailQueue(unittest.TestCase):
             for item in xrange(10):
                 EmailQueue.queue_mail(f.email(), f.email(), f.text())
 
-            transaction.cursor.commit()
+            transaction.commit()
 
             self.assertEqual(EmailQueue.search([], count=True), 10)
             self.assertEqual(
@@ -99,7 +90,7 @@ class TestEmailQueue(unittest.TestCase):
             for item in xrange(10):
                 EmailQueue.queue_mail(f.email(), f.email(), f.text())
 
-            transaction.cursor.commit()
+            transaction.commit()
 
             self.assertEqual(
                 EmailQueue.search([('state', '=', 'outbox')], count=True), 10
@@ -159,7 +150,7 @@ class TestEmailQueue(unittest.TestCase):
             for item in xrange(10):
                 EmailQueue.queue_mail(f.email(), f.email(), f.text())
 
-            transaction.cursor.commit()
+            transaction.commit()
 
         # A queue is used to handle the ones which errored.
         searialization_error_q = Queue.Queue(3)
@@ -190,6 +181,8 @@ class TestEmailQueue(unittest.TestCase):
                     # This specific email could not be sent because of a
                     # transaction serialization error
                     searialization_error_q.put(email.id)
+                finally:
+                    Cache.drop(DB_NAME)
 
         with Transaction().start(DB_NAME, USER, CONTEXT) as transaction:
             email1, email2 = EmailQueue.search(
