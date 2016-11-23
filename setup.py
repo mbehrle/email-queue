@@ -90,7 +90,7 @@ tests_require = [
 MODULE2PREFIX = {}
 
 MODULE = "email_queue"
-PREFIX = "fio"
+PREFIX = "m9s"
 for dep in info.get('depends', []):
     if not re.match(r'(ir|res|webdav)(\W|$)', dep):
         requires.append(
