@@ -56,11 +56,14 @@ class EmailQueue(ModelSQL, ModelView):
         if isinstance(msg, Message):
             msg = msg.as_string()
 
-        return cls.create([{
+        mails = cls.create([{
             'from_addr': from_addr,
             'to_addrs': to_addrs,
             'msg': msg,
         }])
+        with Transaction().set_context(
+                queue_name='email_queue'):
+                    cls.__queue__.send_queue(mails)
 
     def send(self, smtp_server):
         """
@@ -94,6 +97,17 @@ class EmailQueue(ModelSQL, ModelView):
                 values['state'] = 'sent'
                 self.write([self], values)
                 txn.commit()
+
+    @classmethod
+    def send_queue(cls, mails):
+        """
+        Sends emails with the default SMTP server and marks them as sent.
+        """
+        server = get_smtp_server()
+
+        for mail in mails:
+            mail.send(server)
+        server.quit()
 
     @classmethod
     def send_all(cls):
